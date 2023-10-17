@@ -1,0 +1,1 @@
+* Project structure source https://github.com/zhanymkanov/fastapi-best-practices#1-project-structure-consistent--predictable
