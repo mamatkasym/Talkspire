@@ -6,13 +6,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    API_V1_STR: str = 'api/v1'
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 5
+    ALGORITHM: str
+    API_V1_STR: str = '/api/v1'
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PASSWORD: str
     POSTGRES_USER: str
     PROJECT_NAME: str = 'Talkspire'
-
+    SECRET_KEY: str
     SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode='before')
