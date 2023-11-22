@@ -12,6 +12,11 @@ python-multipart = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 sqlalchemy = "*"
 bcrypt = "*"
+fastapi-users = {extras = ["sqlalchemy"], version = "*"}
+asyncpg = "*"
+pydantic = "*"
+alembic = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
