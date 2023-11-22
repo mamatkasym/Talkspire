@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.core.security import verify_password
-from src.models.users import User
+from src.models.user import User
 
 
 class UserRepository:

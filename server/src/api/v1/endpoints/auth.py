@@ -1,18 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
+from fastapi_users import FastAPIUsers
 
-from src.core import security
-from src.repository.users import user_repository
+from src.api.v1.auth.backends import auth_backend
+from src.api.v1.auth.manager import get_user_manager
+from src.models.user import User
+from src.schemas.user import UserRead, UserCreate
 
 router = APIRouter()
 
+fastapi_users = FastAPIUsers[User, int](get_user_manager, [auth_backend])
 
-@router.post('/login')
-def login(db: Session = Depends(), form_data: OAuth2PasswordRequestForm = Depends()):
-    user = user_repository.authenticate(db, form_data.username, form_data.password)
+router.include_router(
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/jwt",
+    tags=["auth"],
+)
 
-    if not user:
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-
-    return {"access_token": security.create_access_token(user.id)}
+router.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="",
+    tags=["auth"],
+)

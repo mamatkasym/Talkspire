@@ -13,23 +13,26 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PASSWORD: str
     POSTGRES_USER: str
+    POSTGRES_PORT: int
     PROJECT_NAME: str = 'Talkspire'
     SECRET_KEY: str
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    DATABASE_URL: Optional[PostgresDsn] = None
+    ASYNC_DATABASE_URL: Optional[PostgresDsn] = None
 
-    @field_validator("SQLALCHEMY_DATABASE_URI", mode='before')
+    @field_validator("ASYNC_DATABASE_URL", mode='before')
     def assemble_db_connection(cls, v: Optional[str], values: ValidationInfo) -> any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
-            scheme="postgresql+psycopg2",
+            scheme="postgresql+asyncpg",
             username=values.data.get("POSTGRES_USER"),
             password=values.data.get("POSTGRES_PASSWORD"),
             host=values.data.get("POSTGRES_HOST"),
-            path=f"/{values.data.get('POSTGRES_DB') or ''}",
+            port=values.data.get('POSTGRES_PORT'),
+            path=f"{values.data.get('POSTGRES_DB') or ''}",
         )
 
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file="../.env")
 
 
 settings = Settings()
